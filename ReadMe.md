@@ -12,6 +12,7 @@ Instructions for code
   4: Search for a value in the tree.
   5: Get the height of the tree.
   6: Exit the program.
+  If you enter a number other then 1-6,then wrong choice is shown on the display.
 3)EXAMPLE
  Choose the operation you want :
  1:INSERT
