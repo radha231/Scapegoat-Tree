@@ -21,6 +21,15 @@ void size(node *x)
     }
     return;
 }
+void inorder(node *root)
+{
+    if (root)
+    {
+        inorder(root->left);
+        printf("%d ", root->value);
+        inorder(root->right);
+    }
+}
 node *allocate(int k)
 {
     node *x = (node *)malloc(sizeof(node));
@@ -57,34 +66,58 @@ void postorder(int *arr, node *x)
         size1++;
         // printf("posorder arr[%d]=%d \n",size1,arr[size1-1]);
         //arr = (int *)realloc(arr, (size1) * sizeof(int));
+       
+        x->right = NULL;
+        x->left = NULL;
+        x->parent = NULL;
+        x = NULL;
         free(x);
     }
+
 }
 void BST_build(int k, node *groot)
 {
+    printf("mid value: %d\n", k);
+    //printf("display:");
+    //inorder(groot);
     node *u;
-    u=(node*)malloc(sizeof(node));
+    //printf("loop1\n");
+    //u=(node*)malloc(sizeof(node));
     u=allocate(k);
-    node *pre;
-    while(groot!=NULL)
+    node *pre=NULL;
+    //printf("loop2\n");
+    //printf("groot_value %d",u->value);
+    while (groot != NULL)
     {
+        //printf("upgroot_value %d\n u_value %d\n",groot->value,u->value);
+
+        //printf("loop677\n");
         if (u->value < groot->value)
     {
+        //printf("HELLO WORLD");
+
         //groot->left = BST_build(k, groot->left,p);
         pre=groot;
         groot=groot->left;
+         //printf("groot_value %d,radha %d",groot->value,pre->value);
+         //exit(-1);
     }
-    if (u->value > groot->value)
+    else if (u->value > groot->value)
     {
         //groot->left = BST_build(k, groot->left,p);
         pre=groot;
          groot=groot->right ;
+         //printf("loop6\n");
     }
-    }
+    //printf("loop634\n");
+    } 
+    //printf("loop67\n");
+    //printf("groot_value %d", groot->value);
     if(u->value<pre->value)
     pre->left=u;
-    if(u->value>pre->value)
+    else if(u->value>pre->value)
     pre->right=u;
+    u->parent = pre;
     /*if (u->value < groot->value)
     {
         groot->left = BST_build(k, groot->left,p);
@@ -95,13 +128,15 @@ void BST_build(int k, node *groot)
         groot->right = BST_build(k, groot->right,p);
         groot->right->parent = groot;
     }*/
-    
+    printf("DISPLAY: ");
+    inorder(groot);
+    printf("\n");
 }
 void split_array(int *arr, int s, int e, node *groot)
 {
     int m=1;
     printf("asra1 %d\n",arr[m]);
-    if (s < e)
+    if (s <= e)
     {
         int mid =s+(e-s)/2;
         //printf("m%d %d\n",mid,arr[mid]);
@@ -111,8 +146,8 @@ void split_array(int *arr, int s, int e, node *groot)
         
         BST_build(arr[mid], groot);
         printf("mid %d",arr[mid]);
-        split_array(arr, s, mid - 1, groot);
-        split_array(arr, mid + 1, e, groot);
+        split_array(arr, s, mid-1, groot);
+        split_array(arr, mid+1, e, groot);
     }
 }
 /*void qsort(int * arr,int size){
@@ -189,7 +224,8 @@ void print_array(int *arr, int size)
     }
     printf("\n");
 }
-void rebuild(node *x)
+
+void rebuild(node *x,node * root)
 {
 
     size1 = 0;
@@ -199,7 +235,20 @@ void rebuild(node *x)
     // printf("hello\n");
 
     postorder(arr, x);
+    printf("x %d\n\n", x->value);
+    if(x->value < groot->value){
+        groot->left = NULL;
+    }
+    else{
+        groot->right;
+    }
+    x->right = NULL;
+        x->left = NULL;
+        x->parent = NULL;
+        x = NULL;
+        free(x);
     print_array(arr, size1);
+    inorder(root);
     // printf("size1=%d\n",size1);
     // printf("size=%d,sizeof(arr)=%d,sizeof(arr[0])=%d\n",size1,sizeof(arr),sizeof(arr[0]));
     // print_array(arr,size1);
@@ -257,18 +306,10 @@ void add(int k, node *root)
     {
         node *w = findscapegoat(x);
         printf("w=%d\n", w->value);
-        rebuild(w);
+        rebuild(w,root);
     }
 }
-void inorder(node *root)
-{
-    if (root)
-    {
-        inorder(root->left);
-        printf("%d ", root->value);
-        inorder(root->right);
-    }
-}
+
 int main()
 {
     node *root = NULL;
