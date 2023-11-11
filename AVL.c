@@ -548,7 +548,12 @@ int main(){
     int * arr;
     node * root,*root1;int i,x;
     char c[2],e;
-	root=NULL;
+    root=(node*)malloc(sizeof(node));
+    root->data=0;
+    root->p=NULL;
+    root->left=NULL;
+    root->right=NULL;
+    root->h=0;
     
     do{
       printf("Enter your choice:");
@@ -557,16 +562,7 @@ int main(){
         case 'i':
                 printf("Element to be inserted:");
                 scanf("%d",&x);
-				if(root==NULL){
-					root=(node*)malloc(sizeof(node));
-					 root->data=x;
-                     root->p=NULL;
-                     root->left=NULL;
-                     root->right=NULL;
-                     root->h=0;
-				}
-				else{
-                root=insert(x,root);}
+                root=insert(x,root);
                 break;
         case 's':
                 printf("Enter data you want to search:");
@@ -577,8 +573,7 @@ int main(){
                  inorder(root);
                  printf("\n");
                  printf("Preorder\n");
-                 preorder(root);printf("\n");
-				 break;
+                 preorder(root);break;
         case 'd':printf("Height of tree is %d", maxDepth(root)); break;
         case 'r':
                printf("Element to be deleted:");
