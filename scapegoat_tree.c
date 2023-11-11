@@ -1,10 +1,11 @@
+//Scapegoat_Tree
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include<time.h>
 #include<string.h>
 int count = 0, n = 0, q = 0, size1 = 0,flag=0;
-int size2;
+int size2,goat=0;;
 float alpha=(2.0)/(3.0);
 
 
@@ -392,10 +393,10 @@ node* deleteNode(node* root, int k)
 }
 
 //This function tells whether the certain element is present or not in the scapegoat tree
-node* search(node* root, int key)
-{
+node * search(node* root, int key)
+{    if(root){
     // Base Cases: root is null or key is present at root
-    if (root == NULL || root->value == key)
+    if ( root->value == key)
         return root;
  
     // Key is greater than root's key
@@ -403,8 +404,15 @@ node* search(node* root, int key)
         return search(root->right, key);
  
     // Key is smaller than root's key
+	else if(root->value > key)
     return search(root->left, key);
 }
+else{
+	 goat=1;
+		return root;
+}
+}
+ 
  
 int main()
 {   double time_taken;
@@ -446,17 +454,26 @@ int main()
             inorder(root);
             printf("\n");
             break;
-        case 3:                                             //DELETE OPERATION
+       case 3:                  //DELETE OPERATION
             
             printf("enter data: ");
             scanf("%d", &data);
-            root=deleteNode(root, data);
+            
+            search(root, data);
+				if(goat==0){                //IF ELEMENT IS THERE THEN IT IS DELETED
+					
+				}
+				else{                           //ELSE PRINTS THAT IT IS NOT PRESENT
+					printf("Element not prsent\n");
+					goat=0;
+                    continue;
+				}
+			root=deleteNode(root, data);
             n--;
-            printf("n= %d", n);
             if(n==0){
                 printf("NO ELEMENTS LEFT\n");
             }
-            else if(2*n<q)
+            else if(2*n<q)          //REBUILDING CONDITION
             {   
                 rebuilding(root);
                 root = groot1;
@@ -464,10 +481,17 @@ int main()
                 q = n;
             }
             break;
-        case 4:                                                        //SEARCH OPERATION
+        case 4:                                     //SEARCH OPERATION
                 printf("enter key to be  searched\n");
                 scanf("%d", &data);
                 search(root, data);
+				if(goat==0){
+					printf("Found\n");
+				}
+				else{
+                    printf("Not Found\n");
+				}
+				goat=0;
                 break;
         
         //HEIGHT OF TREE OPERATION
