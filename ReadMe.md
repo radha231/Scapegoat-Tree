@@ -69,18 +69,16 @@ For example, if you've inserted values 5, 3, 7, and 2, choosing this option will
 
 Deletion (Operation 3):
 
-You'll be prompted to enter the value you want to delete from the tree.
-If the value is found in the tree, it will be removed.
-If the tree becomes unbalanced after the deletion (i.e., 2*n < q condition is met), the tree will be rebuilt.
+User inputs a value to delete from a binary search tree. If found, it's removed; then, the program checks if the tree is unbalanced. If so (2*n < height,where n = number of nodes in the tree), it undergoes rebuilding to maintain efficiency. Rebuilding involves restructuring the tree to keep it balanced, ensuring effective searching in subsequent operations.
 
 Search (Operation 4):
 
 You can enter a value that you want to search for in the tree.
-The program will then check if the value is present in the tree and let you know if it's found.
+The program will then check if the value is present in the tree and let you know if it's found. 
 
 Depth (Operation 5):
 
-This option will return the height or depth of the tree. The height of the tree is the longest path from the root to a leaf.
+This option will return the depth of the tree. The depth of the tree is the longest path from the root to a leaf. 
 
 Exit (Operation 6):
 
