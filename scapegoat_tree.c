@@ -8,7 +8,7 @@ int size2;
 float alpha=(2.0)/(3.0);
 
 
-struct NODE
+struct NODE                 //Our tree node contains an integer value and 3 pointers as left,right and parent
 {
     int value;
     struct NODE *left;
@@ -17,7 +17,7 @@ struct NODE
 };
 typedef struct NODE node;
 node *groot1=NULL;
-void size(node *x)
+void size(node *x)              //This function tells the size
 {
     if (x)
     {
@@ -28,24 +28,24 @@ void size(node *x)
     return;
 }
 
-int maxDepth(node* temp)
+int maxDepth(node* temp)                //This function helps us to keep tracck of depth of every node
 {
     if (temp == NULL)
         return 0;
     else {
         /* compute the depth of each subtree */
-        int lDepth = maxDepth(temp->left);
-        int rDepth = maxDepth(temp->right);
+        int lDepth = maxDepth(temp->left);              //if node is present in left,then we go to left subtree and increase 1 depth
+        int rDepth = maxDepth(temp->right);             //if node is present in right,then we go to right subtree and increase 1 depth
  
         /* use the larger one */
-        if (lDepth > rDepth)
+        if (lDepth > rDepth)                                     
             return (lDepth + 1);
         else
             return (rDepth + 1);
     }
 }
 
-void inorder(node *root)
+void inorder(node *root)                //We are doing inorder traversal to know whether elements present in tree follows bst property 
 {
     if (root)
     {
@@ -55,7 +55,7 @@ void inorder(node *root)
     }
    
 }
-node *allocate(int k)
+node *allocate(int k)                      //Allocates dynamically the nodes and initializes its pointers to NULL 
 {
     node *x = (node *)malloc(sizeof(node));
     x->value = k;
@@ -64,7 +64,7 @@ node *allocate(int k)
     x->parent = NULL;
     return x;
 }
-node *findscapegoat(node *x)
+node *findscapegoat(node *x)        //This function helps to find the scapegoat(the node which gets unbalanced) and returns the parent of scapegoat
 {
     int sizec, sizep;
     count = 0;
@@ -74,12 +74,15 @@ node *findscapegoat(node *x)
     x = x->parent;
     size(x);
     sizep = count;
-    if ( sizec <= ((alpha) * sizep))
+    if ( sizec <= ((alpha) * sizep))       //sizec is the 
     {
         return findscapegoat(x);
     }
     return x;
 }
+
+//We wanted to store the values in an array of the whole subtree which starts from parent of scapegoat excluding the parent itself//
+//and also we wanted to store them in postorder traversal//
 void postorder(int *arr, node *x)
 {
     if (x)
@@ -94,8 +97,9 @@ void postorder(int *arr, node *x)
         x = NULL;
         free(x);
     }
-
 }
+
+//This function insert the median of median value from array that has been built in postorder function according binary search tree
 void BST_build(int k, node *groot)
 {
     if(flag==1){
@@ -130,6 +134,8 @@ void BST_build(int k, node *groot)
     u->parent = pre;
     }
 }
+
+//This function splits the array into suitable halves recursively
 void split_array(int *arr, int s, int e, node *groot)
 {
     int m=1;
@@ -205,6 +211,8 @@ void mergeSort(int arr[], int l, int r)
         merge(arr, l, m, r);
     }
 }
+
+//This function prints nicely the values that are there in our tree
 void print_array(int *arr, int size)
 {    
     for (int i = 0; i < size; i++)
@@ -214,6 +222,7 @@ void print_array(int *arr, int size)
     printf("\n");
 }
 
+//This function rebuilds the tree if after insertion of elements scapegoat is there
 void rebuild(node *x,node * root)
 {
     
@@ -221,12 +230,13 @@ void rebuild(node *x,node * root)
     int *arr = (int *)malloc(sizeof(int)*20000);
     node *groot = x->parent;
     postorder(arr, x);
-    if(x->value < groot->value){
+    if(x->value < groot->value){           //if child is found at left then parent's left is turned to NULL
         groot->left = NULL;
     }
-    else{
+    else{                                   //else the parent's right is turned to NULL
         groot->right=NULL;
     }
+    //the child x has been turned to NULL and then we free it
     x->right = NULL;
         x->left = NULL;
         x->parent = NULL;
@@ -239,12 +249,15 @@ void rebuild(node *x,node * root)
         free(arr);
         arr=NULL;
 }
+
+//This function rebuilds the tree if after deletion the condition of 2*n < q is met
 void rebuilding(node * x){
         node *groot;
         flag = 1;
         size1 = 0;
         int *ar = (int *)malloc(sizeof(int) * 20000);
         postorder(ar, x);
+        //After storing elements in array we will free the node x
         x->right = NULL;
         x->left = NULL;
         x->parent = NULL;
@@ -255,8 +268,10 @@ void rebuilding(node * x){
         int r = size1 - 1;
         mergeSort(ar, l, r);
         split_array(ar, 0, size1 - 1, groot);
-        flag = 0;
+        flag = 0;                     //A condition for build bst to indicate whether deletion is there or not
 }
+
+//This function inserts the new element and calls rebuild if scapegoat is there
 node* add(int k, node *root)
 {
     
@@ -269,20 +284,21 @@ node* add(int k, node *root)
     x = allocate(k);
     while (temp != NULL)
     {
-        if (temp->value > k)
+        if (temp->value > k)            //if the element that has to be inserted is smaller than the root node value,then we traverse to left
         {
             prev = temp;
             temp = temp->left;
             depth++;
         }
-        else
+        else            //if the element that has to be inserted is greater than the root node value,then we traverse to right
         {
             prev = temp;
             temp = temp->right;
             depth++;
         }
     }
-    if (prev->value < k)
+    //inserting new element at correct position
+    if (prev->value < k)      
     {
         prev->right = x;
     }
@@ -292,6 +308,7 @@ node* add(int k, node *root)
     }
     
     x->parent = prev;
+    //defining of new parameter c which is dependent on q and alpha
     float c = fabs(log(q) / (log(alpha)));
     if (depth > c)
     {
@@ -306,6 +323,9 @@ node* add(int k, node *root)
     }
     return root;
 }
+
+//This function deletes the input node just like bst but with extra condition based on number of nodes n and counter q
+//rebuilding is called if 2*n < q . If there is need of rebuilding then rebuilding is called first and then deletion of that node is applied
 node* deleteNode(node* root, int k)
 {
     // Base case
@@ -370,6 +390,8 @@ node* deleteNode(node* root, int k)
         return root;
     }
 }
+
+//This function tells whether the certain element is present or not in the scapegoat tree
 node* search(node* root, int key)
 {
     // Base Cases: root is null or key is present at root
@@ -394,17 +416,18 @@ int main()
    clock_t t; 
     while (c!=6)
     {
-        printf("Enter your choice\n");
+        printf("\nChoose the operation you want :\n");
         printf("1:INSERT\n");
         printf("2:TRAVERSAL\n");
         printf("3:DELETION\n");
         printf("4:SEARCH\n");
         printf("5:Depth\n");
         printf("6:EXIT\n");
+        printf("Enter your choice : ");
        scanf("%d", &c);
         switch (c)
         {
-        case 1:
+        case 1:                                         //INSERT OPERATION
             printf("Enter the value to insert:");
             scanf("%d", &k);
             if (root == NULL)
@@ -418,16 +441,18 @@ int main()
                 root=add(k, root);
             }
             break;
-        case 2:
+        case 2:                                             //TRAVERSAL OPERATION
+            printf("The elements in ascending order are : ");
             inorder(root);
             printf("\n");
             break;
-        case 3:
+        case 3:                                             //DELETE OPERATION
             
             printf("enter data: ");
             scanf("%d", &data);
             root=deleteNode(root, data);
             n--;
+            printf("n= %d", n);
             if(n==0){
                 printf("NO ELEMENTS LEFT\n");
             }
@@ -439,12 +464,13 @@ int main()
                 q = n;
             }
             break;
-        case 4:
+        case 4:                                                        //SEARCH OPERATION
                 printf("enter key to be  searched\n");
                 scanf("%d", &data);
                 search(root, data);
                 break;
         
+        //HEIGHT OF TREE OPERATION
         case 5 :  printf("Height of tree is %d", maxDepth(root)); break;
         default:
            if(c!=6)
